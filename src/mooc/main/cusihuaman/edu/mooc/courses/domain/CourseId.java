@@ -7,6 +7,6 @@ public class CourseId extends Identifier {
         super(value);
     }
 
-    public CourseId() {
+    private CourseId() {
     }
 }
