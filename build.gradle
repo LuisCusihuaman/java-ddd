@@ -1,16 +1,21 @@
 apply plugin: 'java'
 
-sourceCompatibility = 21
-targetCompatibility = 21
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.apache.logging.log4j:log4j-core:2.17.0'
+    // Prod
+    implementation 'org.apache.logging.log4j:log4j-core:2.21.1'
+    implementation 'org.apache.logging.log4j:log4j-api:2.21.1'
     implementation 'com.vlkan.log4j2:log4j2-logstash-layout:1.0.5'
 
+    // Test
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
