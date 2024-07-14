@@ -26,6 +26,8 @@ allprojects {
         implementation 'org.apache.logging.log4j:log4j-core:2.21.1'
         implementation 'org.apache.logging.log4j:log4j-api:2.21.1'
         implementation 'com.vlkan.log4j2:log4j2-logstash-layout:1.0.5'
+        compileOnly 'org.projectlombok:lombok:1.18.34'
+        annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
         // Test
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
@@ -82,6 +84,12 @@ subprojects {
         }
     }
 
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
     // 🚫 Do not generate a Spring Boot jar, only a standard jar
     bootJar {
         enabled = false
@@ -113,17 +121,10 @@ bootJar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
 
 // 📦 Dependencies for the apps
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:3.1.5'
-    compileOnly 'org.projectlombok:lombok:1.18.34'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
     implementation project(":shared")
     implementation project(":backoffice")
