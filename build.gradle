@@ -29,6 +29,14 @@ allprojects {
         compileOnly 'org.projectlombok:lombok:1.18.34'
         annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
+        implementation 'org.hibernate.orm:hibernate-core:6.3.1.Final'
+        implementation 'org.springframework:spring-orm:6.0.13'
+        implementation 'org.apache.tomcat:tomcat-dbcp:10.1.15'
+        implementation 'com.sun.xml.bind:jaxb-impl:4.0.4'
+        implementation 'mysql:mysql-connector-java:8.0.28'
+
+
+
         // Test
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
