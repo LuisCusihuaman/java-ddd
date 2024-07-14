@@ -8,3 +8,7 @@ build:
 .PHONY: test
 test:
 	@./gradlew check --warning-mode all
+
+.PHONY: run
+run:
+	@./gradlew run --args="$(APP_NAME) $(COMMAND)"

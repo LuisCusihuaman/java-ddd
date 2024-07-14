@@ -1,29 +1,133 @@
-apply plugin: 'java'
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    // Prod
-    implementation 'org.apache.logging.log4j:log4j-core:2.21.1'
-    implementation 'org.apache.logging.log4j:log4j-api:2.21.1'
-    implementation 'com.vlkan.log4j2:log4j2-logstash-layout:1.0.5'
-
-    // Test
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-}
-
-test {
-    useJUnitPlatform()
-
-    testLogging {
-        events "passed", "skipped", "failed"
+// 🌟 Main project configuration (located in apps/)
+buildscript {
+    repositories {
+        mavenCentral()
     }
+    dependencies {
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:3.1.5')
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // Prod
+        implementation 'org.apache.logging.log4j:log4j-core:2.21.1'
+        implementation 'org.apache.logging.log4j:log4j-api:2.21.1'
+        implementation 'com.vlkan.log4j2:log4j2-logstash-layout:1.0.5'
+
+        // Test
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    }
+
+    test {
+        useJUnitPlatform()
+
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+
+    // 🔍 Custom task to view source set paths
+    tasks.register('view_paths') {
+        doLast { task ->
+            println "$task.project.name"
+            println "------------------"
+            println "Main: $sourceSets.main.java.srcDirTrees"
+            println "   Resources: $sourceSets.main.resources.srcDirTrees"
+            println "Tests: $sourceSets.test.java.srcDirTrees"
+            println "   Resources: $sourceSets.test.resources.srcDirTrees"
+        }
+    }
+}
+
+// 🌟 Configuration for all subprojects (located in src/*)
+subprojects {
+    group = "cusihuaman.edu.${rootProject.name}"
+
+    // Remove the jvm specific folders specification to make more simple
+    sourceSets {
+        main {
+            java { srcDirs = ['main'] }
+            resources { srcDirs = ['main/resources'] }
+        }
+
+        test {
+            java { srcDirs = ['test'] }
+            resources { srcDirs = ['test/resources'] }
+        }
+    }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web:3.1.5'
+
+        testImplementation rootProject.sourceSets.main.output
+        testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.5'
+
+        if (project.name != "shared") {
+            implementation project(":shared")
+            testImplementation project(":shared").sourceSets.test.output
+        }
+    }
+
+    // 🚫 Do not generate a Spring Boot jar, only a standard jar
+    bootJar {
+        enabled = false
+    }
+
+    // ✅ Enable standard jar generation
+    jar {
+        enabled = true
+    }
+}
+
+// 🌟 Specific configuration for the apps
+sourceSets {
+    main {
+        java { srcDirs = ['apps/main'] }
+        resources { srcDirs = ['apps/main/resources'] }
+    }
+
+    test {
+        java { srcDirs = ['apps/test'] }
+        resources { srcDirs = ['apps/test/resources'] }
+    }
+}
+
+// 🏗️ BootJar configuration for the apps
+bootJar {
+    archiveBaseName.set('java-ddd')
+    archiveVersion.set('0.0.1')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Dependencies for the apps
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.1.5'
+
+    implementation project(":shared")
+    implementation project(":backoffice")
+    implementation project(":mooc")
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.5'
+    testImplementation project(":shared").sourceSets.test.output
+}
+
+// 🏁 Apply the application plugin and set the main class
+apply plugin: 'application'
+
+application {
+    mainClassName = 'cusihuaman.edu.apps.Starter'
 }
