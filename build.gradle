@@ -57,7 +57,7 @@ allprojects {
 subprojects {
     group = "cusihuaman.edu.${rootProject.name}"
 
-    // Remove the jvm specific folders specification to make more simple
+    // Remove the JVM specific folders specification to make more simple
     sourceSets {
         main {
             java { srcDirs = ['main'] }
@@ -113,9 +113,17 @@ bootJar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-// Dependencies for the apps
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+// 📦 Dependencies for the apps
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:3.1.5'
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
     implementation project(":shared")
     implementation project(":backoffice")
