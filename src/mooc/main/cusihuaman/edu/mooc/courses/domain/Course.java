@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class Course {
     private final CourseId id;
-    private final String name;
-    private final String duration;
+    private final CourseName name;
+    private final CourseDuration duration;
 }
