@@ -1,6 +1,7 @@
 package cusihuaman.edu.mooc.courses.infrastructure.persistence;
 
 import cusihuaman.edu.mooc.courses.domain.Course;
+import cusihuaman.edu.mooc.courses.domain.CourseId;
 import cusihuaman.edu.mooc.courses.domain.CourseRepository;
 import cusihuaman.edu.shared.domain.Service;
 
@@ -16,7 +17,7 @@ public class InMemoryCourseRepository implements CourseRepository {
         courses.put(course.getId().value(), course);
     }
 
-    public Optional<Course> search(String id) {
-        return Optional.ofNullable(courses.get(id));
+    public Optional<Course> search(CourseId id) {
+        return Optional.ofNullable(courses.get(id.value()));
     }
 }
